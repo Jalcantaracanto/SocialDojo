@@ -95,39 +95,42 @@ module.exports.likePost = (req, res) => {
 }
 
 // Get timeline posts
-module.exports.getTimelinePosts = async (req, res) => {
+module.exports.getTimelinePosts = (req, res) => {
     const userId = req.params.id
 
-    try {
-        const currentUserPosts = await Post.find({ userId: userId })
-        const followingPosts = await User.aggregate([
-            {
-                $match: {
-                    _id: new mongoose.Types.ObjectId(userId),
+    Post.find({ userId: userId })
+        .then((posts) => {
+            currentUserPosts = posts
+            return User.aggregate([
+                {
+                    $match: {
+                        _id: new mongoose.Types.ObjectId(userId),
+                    },
                 },
-            },
-            {
-                $lookup: {
-                    from: 'posts',
-                    localField: 'following',
-                    foreignField: 'userId',
-                    as: 'followingPosts',
+                {
+                    $lookup: {
+                        from: 'posts',
+                        localField: 'followings',
+                        foreignField: 'userId',
+                        as: 'followingPosts',
+                    },
                 },
-            },
-            {
-                $project: {
-                    followingPosts: 1,
-                    _id: 0,
+                {
+                    $project: {
+                        followingPosts: 1,
+                        _id: 0,
+                    },
                 },
-            },
-        ])
-
-        res.status(200).json(
-            currentUserPosts.concat(...followingPosts[0].followingPosts).sort((a, b) => {
+            ]).exec()
+        })
+        .then((followingPosts) => {
+            const combinedPosts = currentUserPosts.concat(...followingPosts[0].followingPosts)
+            combinedPosts.sort((a, b) => {
                 return b.createdAt - a.createdAt
             })
-        )
-    } catch (error) {
-        res.status(500).json(error)
-    }
+            res.status(200).json(combinedPosts)
+        })
+        .catch((error) => {
+            res.status(500).json(error)
+        })
 }
