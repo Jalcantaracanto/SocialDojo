@@ -109,10 +109,10 @@ module.exports.getTimelinePosts = (req, res) => {
                 },
                 {
                     $lookup: {
-                        from: 'posts',
-                        localField: 'followings',
-                        foreignField: 'userId',
-                        as: 'followingPosts',
+                        from: 'posts', // nombre de la tabla en la base de datos
+                        localField: 'followings', // nombre de la variable en el modelo
+                        foreignField: 'userId', // nombre de la variable en la tabla
+                        as: 'followingPosts', // nombre de la variable en el modelo
                     },
                 },
                 {
