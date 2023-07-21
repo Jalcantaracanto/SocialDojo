@@ -1,5 +1,6 @@
 import React from 'react'
 import { UilAnchor, UilSearch } from '@iconscout/react-unicons'
+// Styles
 import '../styles/LogoSearch.css'
 
 export const LogoSearch = () => {

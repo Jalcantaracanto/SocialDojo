@@ -1,9 +1,12 @@
 import React from 'react'
-import '../styles/ProfileCard.css'
 import Cover from '../assets/cover.jpg'
 import Profile from '../assets/profileImg.jpg'
+// Styles
+import '../styles/ProfileCard.css'
 
 export const ProfileCard = () => {
+    const profilePage = true
+
     return (
         <div className="ProfileCard">
             <div className="ProfileImages">
@@ -28,9 +31,20 @@ export const ProfileCard = () => {
                         <span>1</span>
                         <span>Followers</span>
                     </div>
+
+                    {profilePage && (
+                        <>
+                            <div className="vl"></div>
+                            <div className="follow">
+                                <span>3</span>
+                                <span>Post</span>
+                            </div>
+                        </>
+                    )}
                 </div>
                 <hr />
             </div>
+            <span>My Profile</span>
         </div>
     )
 }
