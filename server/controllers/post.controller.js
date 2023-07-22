@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 //Create new post
 module.exports.createPost = (req, res) => {
     Post.create(req.body)
-        .then((post) => res.json({ message: 'Post Created', post: post }))
+        .then((newPost) => res.status(200).json({ newPost }))
         .catch((err) => res.status(400).json(err))
 }
 

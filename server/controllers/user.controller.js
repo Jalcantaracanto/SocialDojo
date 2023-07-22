@@ -2,44 +2,56 @@ const User = require('../models/user.model')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-//Register a new User
 module.exports.registerUser = (req, res) => {
-    const { username, password, firstname, lastname, email, confirmPassword } = req.body
-    User.create({ username, password, firstname, lastname, email, confirmPassword })
-        .then((user) => res.json(user))
-        .catch((err) => res.status(400).json(err))
+    const { username, password } = req.body
+
+    bcrypt
+        .genSalt(10)
+        .then((salt) => bcrypt.hash(password, salt))
+        .then((hashedPass) => {
+            //transformamos la clave en un hash
+            req.body.password = hashedPass
+            return User.findOne({ username })
+        })
+        .then((oldUser) => {
+            //verificamos si el usuario ya existe
+            if (oldUser) {
+                //si existe, retornamos un error
+                return res.status(400).json({ message: 'User already exists' })
+            }
+            const newUser = new User(req.body) //si no existe, creamos el usuario
+            return newUser.create() //guardamos el usuario
+        })
+        .then((user) => {
+            const token = jwt.sign({ username: user.username, id: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' }) //creamos el token
+            res.status(200).json({ user, token }) //enviamos el usuario y el token
+        })
+        .catch((error) => {
+            res.status(500).json({ message: error.message })
+        })
 }
 
 //Login User
 module.exports.loginUser = (req, res) => {
-    const { email, password } = req.body
+    const { username, password } = req.body
 
-    User.findOne({ email }).then((user) => {
-        if (user === null) {
-            return res.status(400).json({ msg: 'You are not registered' })
-        } else {
-            bcrypt
-                .compare(password, user.password)
-                .then((isValid) => {
-                    if (isValid) {
-                        const userToken = jwt.sign(
-                            {
-                                id: user._id,
-                                email: user.email,
-                                nickname: user.nickname,
-                            },
-                            process.env.SECRET_KEY
-                        )
-                        res.cookie('usertoken', userToken, process.env.SECRET_KEY, {
-                            httpOnly: true,
-                        }).json({ msg: 'Conexión Exitosa!' })
-                    } else {
-                        res.status(403).json({ msg: 'Correo o contraseña incorrectos 2' })
-                    }
-                })
-                .catch((err) => res.status(400).json({ msg: 'Correo o contraseña incorrectos', error: err }))
-        }
-    })
+    User.findOne({ username: username })
+        .then((user) => {
+            if (!user) {
+                return res.status(404).json('User not found')
+            }
+
+            return bcrypt.compare(password, user.password).then((validity) => {
+                if (!validity) {
+                    return res.status(400).json('wrong password')
+                }
+                const token = jwt.sign({ username: user.username, id: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' })
+                res.status(200).json({ user, token })
+            })
+        })
+        .catch((err) => {
+            res.status(500).json(err)
+        })
 }
 
 //Get a User

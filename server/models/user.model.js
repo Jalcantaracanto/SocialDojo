@@ -1,5 +1,4 @@
 const { Schema, model } = require('mongoose')
-const bcrypt = require('bcrypt')
 
 const UserSchema = new Schema(
     {
@@ -22,7 +21,7 @@ const UserSchema = new Schema(
         },
         email: {
             type: String,
-            required: [true, 'Email is required'],
+            // required: [true, 'Email is required'],
             validate: {
                 validator: (val) => /^([\w-\.]+@([\w-]+\.)+[\w-]+)?$/.test(val),
                 message: 'Please enter a valid email',
@@ -43,24 +42,6 @@ const UserSchema = new Schema(
     },
     { timestamps: true }
 )
-
-UserSchema.virtual('confirmPassword')
-    .get(() => this._confirmPassword)
-    .set((value) => (this._confirmPassword = value))
-
-UserSchema.pre('validate', function (next) {
-    if (this.password !== this.confirmPassword) {
-        this.invalidate('confirmPassword', 'password must match confirm password')
-    }
-    next()
-})
-
-UserSchema.pre('save', function (next) {
-    bcrypt.hash(this.password, 10).then((hash) => {
-        this.password = hash
-        next()
-    })
-})
 
 const User = model('User', UserSchema)
 
