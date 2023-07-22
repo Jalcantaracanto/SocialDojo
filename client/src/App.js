@@ -2,6 +2,7 @@ import './App.css'
 import { useSelector } from 'react-redux'
 import { Auth } from './views/Auth'
 import { Home } from './views/Home'
+import { Profile } from './views/Profile'
 import { Routes, Route, Navigate } from 'react-router-dom'
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
                 <Route path="/" element={user ? <Navigate to="home" /> : <Navigate to="auth" />} />
                 <Route path="/home" element={user ? <Home /> : <Navigate to="../auth" />} />
                 <Route path="/auth" element={user ? <Navigate to="../home" /> : <Auth />} />
+                <Route path="/profile/:userId" element={user ? <Profile /> : <Navigate to="../auth" />} />
             </Routes>
         </div>
     )

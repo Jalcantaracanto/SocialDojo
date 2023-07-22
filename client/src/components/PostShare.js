@@ -8,12 +8,13 @@ import '../styles/PostShare.css'
 import { uploadImage, uploadPost } from '../actions/uploadAction'
 
 export const PostShare = () => {
-    const [image, setImage] = useState(null)
-    const imageRef = useRef()
-    const { user } = useSelector((state) => state.authReducer.authData)
-    const description = useRef()
-
     const dispatch = useDispatch()
+    const { user } = useSelector((state) => state.authReducer.authData)
+    const loading = useSelector((state) => state.postReducer.uploading)
+    const serverUrl = process.env.REACT_APP_PUBLIC_FOLDER
+    const imageRef = useRef()
+    const [image, setImage] = useState(null)
+    const description = useRef()
 
     const onImageChange = (event) => {
         if (event.target.files && event.target.files[0]) {
@@ -22,6 +23,11 @@ export const PostShare = () => {
             let img = event.target.files[0]
             setImage(img)
         }
+    }
+
+    const reset = () => {
+        setImage(null)
+        description.current.value = ''
     }
 
     const handleUpload = (e) => {
@@ -45,11 +51,12 @@ export const PostShare = () => {
             }
         }
         dispatch(uploadPost(newPost))
+        reset()
     }
 
     return (
         <div className="PostShare">
-            <img src={ProfileImage} alt="" />
+            <img src={user.profilePicture ? serverUrl + user.profilePicture : serverUrl + 'defaultProfile.png'} alt="" />
             <div>
                 <input type="text" placeholder="What's happening?" ref={description} />
                 <div className="postOptions">
@@ -69,8 +76,8 @@ export const PostShare = () => {
                         <UilSchedule />
                         Schedule
                     </div>
-                    <button className="button ps-button" onClick={handleUpload}>
-                        Share
+                    <button className="button ps-button" onClick={handleUpload} disabled={loading}>
+                        {loading ? 'Uploading...' : 'Share'}
                     </button>
                     <div style={{ display: 'none' }}>
                         <input type="file" name="myImage" ref={imageRef} onChange={onImageChange} />

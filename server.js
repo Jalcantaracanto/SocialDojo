@@ -4,14 +4,13 @@ const cors = require('cors')
 const app = express()
 const port = 8080
 const server = require('http').createServer(app)
-
-
-
+const path = require('path')
 
 //import mongoose config
 require('./server/config/mongoose.config')
 require('dotenv').config()
 
+app.use('/', express.static(path.join(__dirname, 'server/uploads')))
 app.use(cookieParser())
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }))
 app.use(express.json())

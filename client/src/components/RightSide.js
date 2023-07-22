@@ -3,6 +3,7 @@ import Home from '../assets/home.png'
 import Noti from '../assets/noti.png'
 import Comment from '../assets/comment.png'
 import { UilSetting } from '@iconscout/react-unicons'
+import { Link } from 'react-router-dom'
 
 //styles
 import '../styles/RightSide.css'
@@ -15,7 +16,9 @@ export const RightSide = () => {
     return (
         <div className="RightSide">
             <div className="navIcons">
-                <img src={Home} alt="" />
+                <Link to={'../home'}>
+                    <img src={Home} alt="" />
+                </Link>
                 <UilSetting />
                 <img src={Noti} alt="" />
                 <img src={Comment} alt="" />

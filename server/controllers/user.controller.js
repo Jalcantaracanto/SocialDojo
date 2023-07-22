@@ -66,9 +66,9 @@ module.exports.getUser = (req, res) => {
 //Update a User
 module.exports.updateUser = (req, res) => {
     const id = req.params.id
-    const { currentUserId, currentUserAdminStatus, password } = req.body
+    const { _id, currentUserAdminStatus, password } = req.body
 
-    if (id == currentUserId || currentUserAdminStatus) {
+    if (id == _id) {
         const updateUserPromise = new Promise((resolve, reject) => {
             if (password) {
                 bcrypt
@@ -83,7 +83,6 @@ module.exports.updateUser = (req, res) => {
                 resolve()
             }
         })
-
         updateUserPromise
             .then(() => {
                 User.findOneAndUpdate({ _id: id }, req.body, { new: true, runValidators: true })
@@ -91,7 +90,8 @@ module.exports.updateUser = (req, res) => {
                         if (!user) {
                             res.status(404).json({ message: 'User not found.' })
                         } else {
-                            res.status(200).json(user)
+                            const token = jwt.sign({ username: user.username, id: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' })
+                            res.status(200).json({ user, token })
                         }
                     })
                     .catch((err) => res.status(500).json({ message: 'Error to update user', error: err }))

@@ -1,15 +1,28 @@
-import React from 'react'
-import { PostsData } from '../data/PostData'
+import React, { useEffect } from 'react'
+import { getTimelinePosts } from '../actions/postAction'
 import { Post } from './Post'
-//styles
+import { useSelector, useDispatch } from 'react-redux'
 import '../styles/Posts.css'
+import { useParams } from 'react-router-dom'
 
 export const Posts = () => {
+    const params = useParams()
+    const dispatch = useDispatch()
+    const { user } = useSelector((state) => state.authReducer.authData)
+    let { posts, loading } = useSelector((state) => state.postReducer)
+
+    useEffect(() => {
+        dispatch(getTimelinePosts(user._id))
+    }, [])
+    if (!posts) return 'No Posts'
+    if (params.id) posts = posts.filter((post) => post.userId === params.id)
     return (
-        <div className="Post">
-            {PostsData.map((post, id) => {
-                return <Post data={post} id={id} />
-            })}
+        <div className="Posts">
+            {loading
+                ? 'Fetching posts....'
+                : posts.map((post, id) => {
+                      return <Post data={post} key={id} />
+                  })}
         </div>
     )
 }
