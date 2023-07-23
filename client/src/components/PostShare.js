@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react'
 import ProfileImage from '../assets/profileImg.jpg'
 import { UilScenery, UilPlayCircle, UilLocationPoint, UilSchedule, UilTimes } from '@iconscout/react-unicons'
 import { useDispatch, useSelector } from 'react-redux'
+import { getTimelinePosts } from '../actions/postAction';
 
 //styles
 import '../styles/PostShare.css'
@@ -50,8 +51,16 @@ export const PostShare = () => {
                 console.log(error)
             }
         }
+        // dispatch(uploadPost(newPost))
+        // reset()
         dispatch(uploadPost(newPost))
-        reset()
+        .then(() => {
+            dispatch(getTimelinePosts(user._id)); 
+            reset(); 
+        })
+        .catch((error) => {
+            console.log(error);
+        });
     }
 
     return (

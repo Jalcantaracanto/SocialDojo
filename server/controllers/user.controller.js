@@ -20,7 +20,8 @@ module.exports.registerUser = (req, res) => {
                 return res.status(400).json({ message: 'User already exists' })
             }
             const newUser = new User(req.body) //si no existe, creamos el usuario
-            return newUser.create() //guardamos el usuario
+            // return newUser.create() //guardamos el usuario
+            return newUser.save()
         })
         .then((user) => {
             const token = jwt.sign({ username: user.username, id: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' }) //creamos el token
