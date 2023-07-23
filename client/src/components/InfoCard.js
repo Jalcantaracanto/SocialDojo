@@ -12,13 +12,13 @@ export const InfoCard = () => {
 
     const dispatch = useDispatch()
     const params = useParams()
-    const profileUserId = params.userId
+    const profileUserId = params.id
     const [profileUser, setProfileUser] = useState({})
 
     const { user } = useSelector((state) => state.authReducer.authData)
 
-    // console.log(params)
-    // console.log(profileUserId)
+    //console.log(params)
+    //console.log(profileUserId)
     // console.log(user._id)
 
     useEffect(() => {
