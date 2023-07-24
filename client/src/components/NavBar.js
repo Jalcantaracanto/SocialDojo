@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
+import { createChat, userChats } from '../services/chat-service';
 import { styled, alpha } from '@mui/material/styles'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
@@ -17,12 +18,15 @@ import MailIcon from '@mui/icons-material/Mail'
 import NotificationsIcon from '@mui/icons-material/Notifications'
 import MoreIcon from '@mui/icons-material/MoreVert'
 import Avatar from '@mui/material/Avatar'
-import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
 import { getAllUsers, getUser } from '../services/user-service'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import AddIcon from '@mui/icons-material/Add'
+import { logout } from '../actions/AuthAction'
+import MessageIcon from '@mui/icons-material/Message';
+
 
 import '../styles/FollowersCard.css'
 
@@ -86,6 +90,10 @@ export const NavBar = () => {
     const { user } = useSelector((state) => state.authReducer.authData)
     const serverUrl = process.env.REACT_APP_PUBLIC_FOLDER
     const defaultAvatar = user.firstname[0] + user.lastname[0]
+    const dispatch = useDispatch()
+    console.log(user._id)
+
+    
 
     const [anchorEl, setAnchorEl] = React.useState(null)
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null)
@@ -110,6 +118,11 @@ export const NavBar = () => {
         setMobileMoreAnchorEl(event.currentTarget)
     }
 
+    const handleLogout = () => {
+        dispatch(logout())
+        console.log("logout")
+    }
+
     const menuId = 'primary-search-account-menu'
     const renderMenu = (
         <Menu
@@ -130,7 +143,7 @@ export const NavBar = () => {
             <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/profile/${user._id}`}>
                 <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
             </Link>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Menu>
     )
 
@@ -183,6 +196,12 @@ export const NavBar = () => {
     const [dense, setDense] = useState(false)
     const [searchFilter, setSearchFilter] = useState([])
     const [searchValue, setSearchValue] = useState('')
+    const navigate = useNavigate()
+
+     // Error and success messages
+     const [contactErorr, setContactError] = useState(false)
+     const [formError, setFormError] = useState()
+     const [formSuccess, setFormSuccess] = useState()
 
     const getUserFromService = () => {
         getUser(user.id)
@@ -211,25 +230,40 @@ export const NavBar = () => {
         getAllUsersFromService()
         getUserFromService()
     }, [])
+   
 
-    const handleChange = (e) => {
-        const { value } = e.target
-
-        if (value.trim() === '') {
-            setSearchFilter([]) // Restablecer el estado del filtro a un arreglo vacío
-            return
+    const handleChatClick = async (contactId) => {
+        try {
+            // Verificar si ya existe un chat con el usuario
+            const res = await userChats(user._id)
+            console.log(res)
+            const chats = res.data
+            const existingChat = chats.find((chat) => chat.members.includes(contactId))
+            if (existingChat) {
+                // Ya existe un chat con la persona
+                navigate(`/chat`)
+                console.log('Ya existe un chat con esta persona')
+                return
+            }
+            // Crear un nuevo chat si no existe uno previo
+            console.log('creando chat')
+            const chatRes = await createChat({ senderId: user._id, receiverId: contactId })
+            console.log(chatRes.data.chat)
+            navigate(`/chat`)
+        } catch (err) {
+            console.error(err)
         }
-
-        //filter with nickname
-        const filteredUsers = users.filter((user) => {
-            return user.username.toLowerCase().includes(value.toLowerCase())
-        })
-        setSearchFilter(filteredUsers)
     }
 
+
+
+    
+
+   
     useEffect(() => {
         const filteredUsers = users.filter((user) => {
             return user.username.toLowerCase().includes(searchValue.toLowerCase())
+            console.log(user)
         })
         setSearchFilter(filteredUsers)
     }, [searchValue, users])
@@ -289,8 +323,8 @@ export const NavBar = () => {
                                         return (
                                             <ListItem
                                                 secondaryAction={
-                                                    <IconButton edge="end" aria-label="delete" /* onClick={() => addContactFromService(index)} */>
-                                                        <AddIcon />
+                                                    <IconButton edge="end" aria-label="delete" onClick={() => handleChatClick(value._id)}>
+                                                        <MessageIcon />
                                                     </IconButton>
                                                 }
                                                 key={index}
@@ -298,8 +332,10 @@ export const NavBar = () => {
                                                 <Avatar alt="Avatar" src={value.profilePicture ? serverUrl + value.profilePicture : serverUrl + value.firstname[0] + value.lastname[0]}>
                                                     {value.firstname[0] + value.lastname[0]}
                                                 </Avatar>
-
-                                                <ListItemText style={{ color: 'black' }}>{value.username}</ListItemText>
+                                                <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/profile/${value._id}`}>
+                                                <ListItemText style={{ color: 'black' }}>{' '+ value.firstname + ' ' + value.lastname}</ListItemText>
+                                                {console.log(value)}
+                                                </Link>
                                             </ListItem>
                                         )
                                     })
