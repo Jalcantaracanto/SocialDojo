@@ -5,6 +5,7 @@ const app = express()
 const port = 8080
 const server = require('http').createServer(app)
 const path = require('path')
+const { socketEvents } = require('./socket/socket')
 
 //import mongoose config
 require('./server/config/mongoose.config')
@@ -20,5 +21,8 @@ app.use(express.urlencoded({ extended: true }))
 require('./server/routes/user.route')(app)
 require('./server/routes/post.route')(app)
 require('./server/routes/upload.route')(app)
+require('./server/routes/chat.route')(app)
+require('./server/routes/message.route')(app)
 
 server.listen(port, () => console.log(`Listening on port ${port}`))
+socketEvents(server)

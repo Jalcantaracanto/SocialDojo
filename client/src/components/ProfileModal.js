@@ -14,7 +14,6 @@ export const ProfileModal = ({ modalOpen, setModalOpen, data }) => {
     const dispatch = useDispatch()
     const params = useParams()
     const { user } = useSelector((state) => state.authReducer.authData)
-
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
@@ -35,8 +34,10 @@ export const ProfileModal = ({ modalOpen, setModalOpen, data }) => {
             data.append('name', fileName)
             data.append('file', profileImage)
             UserData.profilePicture = fileName
+            console.log(UserData.profilePicture)
             try {
                 dispatch(uploadImage(data))
+                console.log(data)
             } catch (err) {
                 console.log(err)
             }
@@ -53,7 +54,7 @@ export const ProfileModal = ({ modalOpen, setModalOpen, data }) => {
                 console.log(err)
             }
         }
-        dispatch(updateUser(params.userId, UserData))
+        dispatch(updateUser(params.id, UserData))
         setModalOpen(false)
     }
 

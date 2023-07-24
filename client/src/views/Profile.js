@@ -5,16 +5,20 @@ import { PostSide } from '../components/PostSide'
 import { RightSide } from '../components/RightSide'
 
 import '../styles/Profile.css'
+import { NavBar } from '../components/NavBar'
 
 export const Profile = () => {
     return (
-        <div className="Profile">
-            <ProfileLeft />
-            <div className="Profile-center">
-                <ProfileCard location="profilePage" />
-                <PostSide />
+        <>
+            <NavBar />
+            <div className="Profile">
+                <ProfileLeft />
+                <div className="Profile-center">
+                    <ProfileCard location="profilePage" />
+                    <PostSide />
+                </div>
+                <RightSide />
             </div>
-            <RightSide />
-        </div>
+        </>
     )
 }

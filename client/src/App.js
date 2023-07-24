@@ -4,6 +4,7 @@ import { Auth } from './views/Auth'
 import { Home } from './views/Home'
 import { Profile } from './views/Profile'
 import { Routes, Route, Navigate } from 'react-router-dom'
+import { Chat } from './views/Chat'
 
 function App() {
     const user = useSelector((state) => state.authReducer.authData)
@@ -29,8 +30,7 @@ function App() {
                         </main>
                     }
                 />
-
-                {/* <Route path="/chat" element={user ? <Chat /> : <Navigate to="../auth" />} /> */}
+                <Route path="/chat" element={user ? <Chat /> : <Navigate to="../auth" />} />
             </Routes>
         </div>
     )
