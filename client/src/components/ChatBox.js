@@ -58,7 +58,7 @@ export const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) 
             text: newMessage,
             chatId: chat._id,
         }
-        const receiverId = chat.members.find((id) => id !== currentUser)
+        const receiverId = chat.memberss.find((id) => id !== currentUser)
         // send message to socket server
         setSendMessage({ ...message, receiverId })
         // send message to database
@@ -75,6 +75,8 @@ export const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) 
     useEffect(() => {
         scroll.current?.scrollIntoView({ behavior: 'smooth' })
     }, [messages])
+
+    
 
     return (
         <>
@@ -113,7 +115,7 @@ export const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) 
                         </div>
                         {/* chat-sender */}
                         <div className="chat-sender">
-                            <div /*onClick={() => imageRef.current.click()}*/>+</div>
+                            {/* <div onClick={() => imageRef.current.click()}>+</div> */}
                             <InputEmoji value={newMessage} onChange={handleChange} />
                             <div className="send-button button" onClick={handleSend}>
                                 Send

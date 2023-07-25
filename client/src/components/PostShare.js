@@ -2,7 +2,8 @@ import React, { useState, useRef } from 'react'
 import ProfileImage from '../assets/profileImg.jpg'
 import { UilScenery, UilPlayCircle, UilLocationPoint, UilSchedule, UilTimes } from '@iconscout/react-unicons'
 import { useDispatch, useSelector } from 'react-redux'
-import { getTimelinePosts } from '../actions/postAction';
+import { getTimelinePosts } from '../actions/postAction'
+import Avatar from '@mui/material/Avatar'
 
 //styles
 import '../styles/PostShare.css'
@@ -54,18 +55,21 @@ export const PostShare = () => {
         // dispatch(uploadPost(newPost))
         // reset()
         dispatch(uploadPost(newPost))
-        .then(() => {
-            dispatch(getTimelinePosts(user._id)); 
-            reset(); 
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+            .then(() => {
+                dispatch(getTimelinePosts(user._id))
+                reset()
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     }
 
     return (
         <div className="PostShare">
-            <img src={user.profilePicture ? serverUrl + user.profilePicture : serverUrl + 'defaultProfile.png'} alt="" />
+            {/* <img src={user.profilePicture ? serverUrl + user.profilePicture : serverUrl + 'defaultProfile.png'} alt="" /> */}
+            <Avatar style={{width: "3rem", height: "3rem"}} alt="Avatar" src={user.profilePicture ? serverUrl + user.profilePicture : serverUrl + user.firstname[0] + user.lastname[0]}>
+                {user.firstname[0].toUpperCase() + user.lastname[0].toUpperCase()}
+            </Avatar>
             <div>
                 <input type="text" placeholder="What's happening?" ref={description} />
                 <div className="postOptions">

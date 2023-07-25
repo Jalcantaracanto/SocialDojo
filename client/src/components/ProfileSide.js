@@ -8,8 +8,8 @@ import { FollowersCard } from './FollowersCard'
 export const ProfileSide = () => {
     return (
         <div className="ProfileSide">
-            <LogoSearch />
-            <ProfileCard location="homepage" />
+            {/* <LogoSearch /> */}
+            {/* <ProfileCard location="homepage" /> */}
             <FollowersCard />
         </div>
     )

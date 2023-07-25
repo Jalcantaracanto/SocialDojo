@@ -20,3 +20,14 @@ export const unfollowUser = (id, data) => async (dispatch) => {
     dispatch({ type: 'UNFOLLOW_USER', data: id })
     UserApi.unfollowUser(id, data)
 }
+
+export const getUser = (id) => async (dispatch) => {
+    dispatch({ type: 'GET_USER_START' })
+    try {
+        const { data } = await UserApi.getUser(id)
+        console.log(data)
+        dispatch({ type: 'GET_USER_SUCCESS', data: data })
+    } catch (error) {
+        dispatch({ type: 'GET_USER_FAIL' })
+    }
+}

@@ -1,15 +1,11 @@
 import React from 'react'
 import '../styles/ProfileSide.css'
-import { LogoSearch } from './LogoSearch'
 import { FollowersCard } from './FollowersCard'
-import { InfoCard } from './InfoCard'
 
-export const ProfileLeft = () => {
+export const ProfileLeft = ({following, setfollowing}) => {
     return (
         <div className="ProfileSide">
-            <LogoSearch />
-            <InfoCard />
-            <FollowersCard />
+            <FollowersCard following={following} setfollowing={setfollowing}/>
         </div>
     )
 }

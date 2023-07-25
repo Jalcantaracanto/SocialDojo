@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useContext } from 'react'
-import { createChat, userChats } from '../services/chat-service';
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useState } from 'react'
+import { createChat, userChats } from '../services/chat-service'
 import { styled, alpha } from '@mui/material/styles'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
@@ -11,7 +12,6 @@ import Badge from '@mui/material/Badge'
 import MenuItem from '@mui/material/MenuItem'
 import Menu from '@mui/material/Menu'
 import List from '@mui/material/List'
-import MenuIcon from '@mui/icons-material/Menu'
 import SearchIcon from '@mui/icons-material/Search'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import MailIcon from '@mui/icons-material/Mail'
@@ -23,24 +23,23 @@ import { Link, useNavigate } from 'react-router-dom'
 import { getAllUsers, getUser } from '../services/user-service'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
-import AddIcon from '@mui/icons-material/Add'
 import { logout } from '../actions/AuthAction'
-import MessageIcon from '@mui/icons-material/Message';
-
+import MessageIcon from '@mui/icons-material/Message'
+import HomeIcon from '@mui/icons-material/Home'
+import ChatIcon from '@mui/icons-material/Chat'
 
 import '../styles/FollowersCard.css'
 
 const Demo = styled('div')(({ theme }) => ({
     backgroundColor: 'white',
     width: '15%',
-    marginLeft: '15vh',
+    marginLeft: '171vh',
     marginTop: '1vh',
-    position: 'absolute', 
-    top: '64px', 
-    zIndex: 1, 
+    position: 'absolute',
+    top: '64px',
+    zIndex: 1,
     border: '1px solid #ccc',
     borderRadius: '8px',
-    
 }))
 
 const Search = styled('div')(({ theme }) => ({
@@ -83,21 +82,20 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }))
 
-const pages = ['Products', 'Pricing', 'Blog']
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
-
 export const NavBar = () => {
     const { user } = useSelector((state) => state.authReducer.authData)
     const serverUrl = process.env.REACT_APP_PUBLIC_FOLDER
-    const defaultAvatar = user.firstname[0] + user.lastname[0]
+    const defaultAvatar = user.firstname[0].toUpperCase() + user.lastname[0].toUpperCase()
     const dispatch = useDispatch()
-    console.log(user._id)
 
-    
+    const [anchorElNav, setAnchorElNav] = useState(null)
+    const handleCloseNavMenu = () => {
+        setAnchorElNav(null)
+    }
 
+    //notificaciones
     const [anchorEl, setAnchorEl] = React.useState(null)
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null)
-
     const isMenuOpen = Boolean(anchorEl)
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
 
@@ -120,7 +118,7 @@ export const NavBar = () => {
 
     const handleLogout = () => {
         dispatch(logout())
-        console.log("logout")
+        console.log('logout')
     }
 
     const menuId = 'primary-search-account-menu'
@@ -181,9 +179,11 @@ export const NavBar = () => {
                 <p>Notifications</p>
             </MenuItem>
             <MenuItem onClick={handleProfileMenuOpen}>
-                <IconButton size="large" aria-label="account of current user" aria-controls="primary-search-account-menu" aria-haspopup="true" color="inherit">
-                    <AccountCircle />
-                </IconButton>
+                {
+                    <IconButton size="large" aria-label="account of current user" aria-controls="primary-search-account-menu" aria-haspopup="true" color="inherit">
+                        <AccountCircle />
+                    </IconButton>
+                }
                 <p>Profile</p>
             </MenuItem>
         </Menu>
@@ -198,10 +198,7 @@ export const NavBar = () => {
     const [searchValue, setSearchValue] = useState('')
     const navigate = useNavigate()
 
-     // Error and success messages
-     const [contactErorr, setContactError] = useState(false)
-     const [formError, setFormError] = useState()
-     const [formSuccess, setFormSuccess] = useState()
+    // Error and success messages
 
     const getUserFromService = () => {
         getUser(user.id)
@@ -218,75 +215,92 @@ export const NavBar = () => {
         getAllUsers()
             .then((response) => {
                 setUsers(response.data)
-                console.log(response.data)
+                // console.log(response.data)
             })
             .catch((error) => {
                 console.log(error)
             })
-        console.log(users)
+        // console.log(users)
     }
 
     useEffect(() => {
-        getAllUsersFromService()
-        getUserFromService()
-    }, [])
-   
+        if (searchValue) {
+            getAllUsersFromService()
+            getUserFromService()
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchValue])
 
     const handleChatClick = async (contactId) => {
         try {
             // Verificar si ya existe un chat con el usuario
             const res = await userChats(user._id)
-            console.log(res)
+            // console.log(res)
             const chats = res.data
             const existingChat = chats.find((chat) => chat.members.includes(contactId))
             if (existingChat) {
                 // Ya existe un chat con la persona
                 navigate(`/chat`)
-                console.log('Ya existe un chat con esta persona')
+
                 return
             }
-            // Crear un nuevo chat si no existe uno previo
-            console.log('creando chat')
-            const chatRes = await createChat({ senderId: user._id, receiverId: contactId })
-            console.log(chatRes.data.chat)
+
             navigate(`/chat`)
         } catch (err) {
             console.error(err)
         }
     }
 
-
-
-    
-
-   
     useEffect(() => {
         const filteredUsers = users.filter((user) => {
             return user.username.toLowerCase().includes(searchValue.toLowerCase())
-            console.log(user)
         })
         setSearchFilter(filteredUsers)
     }, [searchValue, users])
 
     return (
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{ flexGrow: 1, marginBottom: '1rem' }}>
             <AppBar position="static">
                 <Toolbar>
-                    <IconButton size="large" edge="start" color="inherit" aria-label="open drawer" sx={{ mr: 2 }}>
+                    {/* <IconButton size="large" edge="start" color="inherit" aria-label="open drawer" sx={{ mr: 2 }}>
                         <MenuIcon />
-                    </IconButton>
+                    </IconButton> */}
                     <Typography variant="h6" noWrap component="div" sx={{ display: { xs: 'none', sm: 'block' } }}>
-                        MUI
+                        <Link style={{ textDecoration: 'none', color: 'white' }} to={'../home'}>
+                            {user.username}
+                        </Link>
                     </Typography>
-                    <Search>
+
+                    {/* <Search>
                         <SearchIconWrapper>
                             <SearchIcon />
                         </SearchIconWrapper>
                         <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} onChange={(e) => setSearchValue(e.target.value)} />
-                    </Search>
+                    </Search> */}
 
                     <Box sx={{ flexGrow: 1 }} />
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                        <IconButton
+                            size="large"
+                            aria-label="show 17 new notifications"
+                            color="inherit"
+                            onClick={() => {
+                                navigate('/home')
+                            }}
+                        >
+                            <HomeIcon />
+                        </IconButton>
+                        <IconButton
+                            size="large"
+                            aria-label="show 17 new notifications"
+                            color="inherit"
+                            onClick={() => {
+                                navigate('/chat')
+                            }}
+                        >
+                            <ChatIcon />
+                        </IconButton>
+
                         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                             <Badge badgeContent={4} color="error">
                                 <MailIcon />
@@ -303,49 +317,53 @@ export const NavBar = () => {
                             </Avatar>
                         </IconButton>
                     </Box>
+                    <Search>
+                        <SearchIconWrapper>
+                            <SearchIcon />
+                        </SearchIconWrapper>
+                        <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} onChange={(e) => setSearchValue(e.target.value)} />
+                    </Search>
                     <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
                         <IconButton size="large" aria-label="show more" aria-controls={mobileMenuId} aria-haspopup="true" onClick={handleMobileMenuOpen} color="inherit">
                             <MoreIcon />
                         </IconButton>
                     </Box>
                 </Toolbar>
-                
             </AppBar>
             {renderMobileMenu}
             {renderMenu}
             {searchValue && (
-                    <Demo>
-                        <List dense={dense}>
-                            {searchFilter.length > 0 ? (
-                                searchFilter
-                                    .sort((a, b) => a.username.localeCompare(b.username)) // Ordena los elementos por el nickname
-                                    .map((value, index) => {
-                                        return (
-                                            <ListItem
-                                                secondaryAction={
-                                                    <IconButton edge="end" aria-label="delete" onClick={() => handleChatClick(value._id)}>
-                                                        <MessageIcon />
-                                                    </IconButton>
-                                                }
-                                                key={index}
-                                            >
-                                                <Avatar alt="Avatar" src={value.profilePicture ? serverUrl + value.profilePicture : serverUrl + value.firstname[0] + value.lastname[0]}>
-                                                    {value.firstname[0] + value.lastname[0]}
-                                                </Avatar>
-                                                <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/profile/${value._id}`}>
-                                                <ListItemText style={{ color: 'black' }}>{' '+ value.firstname + ' ' + value.lastname}</ListItemText>
+                <Demo>
+                    <List dense={dense}>
+                        {searchFilter.length > 0 ? (
+                            searchFilter
+                                .sort((a, b) => a.username.localeCompare(b.username)) // Ordena los elementos por el nickname
+                                .map((value, index) => {
+                                    return (
+                                        <ListItem
+                                            secondaryAction={
+                                                <IconButton edge="end" aria-label="delete" onClick={() => handleChatClick(value._id)}>
+                                                    <MessageIcon />
+                                                </IconButton>
+                                            }
+                                            key={index}
+                                        >
+                                            <Avatar alt="Avatar" src={value.profilePicture ? serverUrl + value.profilePicture : serverUrl + value.firstname[0] + value.lastname[0]}>
+                                                {value.firstname[0] + value.lastname[0]}
+                                            </Avatar>
+                                            <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/profile/${value._id}`}>
+                                                <ListItemText style={{ color: 'black' }}>{' ' + value.firstname + ' ' + value.lastname}</ListItemText>
                                                 {console.log(value)}
-                                                </Link>
-                                            </ListItem>
-                                        )
-                                    })
-                            ) : (
-                                <p style={{ color: 'black' }}>No existe el Usuario</p>
-                            )}
-                        </List>
-                    </Demo>
-                )}
+                                            </Link>
+                                        </ListItem>
+                                    )
+                                })
+                        ) : (
+                            <p style={{ color: 'black' }}>No existe el Usuario</p>
+                        )}
+                    </List>
+                </Demo>
+            )}
         </Box>
-        
     )
 }

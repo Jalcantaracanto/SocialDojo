@@ -7,30 +7,24 @@ import { Link } from 'react-router-dom'
 
 //styles
 import '../styles/RightSide.css'
-import { TrendCard } from './TrendCard'
-import { ShareModal } from './ShareModal'
+// import { TrendCard } from './TrendCard'
+// import { ShareModal } from './ShareModal'
+// import { NavIcons } from './NavIcons'
+import { ProfileCard } from './ProfileCard'
 
-export const RightSide = () => {
-    const [modalOpen, setModalOpen] = useState(false)
+export const RightSide = ({ location }) => {
+    // const [modalOpen, setModalOpen] = useState(false)
 
     return (
         <div className="RightSide">
-            <div className="navIcons">
-                <Link to={'../home'}>
-                    <img src={Home} alt="" />
-                </Link>
-                <UilSetting />
-                <img src={Noti} alt="" />
-                <Link to={'../chat'}>
-                    <img src={Comment} alt="" />
-                </Link>
-            </div>
-            <TrendCard />
+            <ProfileCard location="home" />
+            {/* <NavIcons/> */}
+            {/* <TrendCard /> */}
 
-            <button className="button r-button" onClick={() => setModalOpen(true)}>
+            {/* <button className="button r-button" onClick={() => setModalOpen(true)}>
                 Share
-            </button>
-            <ShareModal modalOpen={modalOpen} setModalOpen={setModalOpen} />
+            </button> */}
+            {/* <ShareModal modalOpen={modalOpen} setModalOpen={setModalOpen} /> */}
         </div>
     )
 }

@@ -2,18 +2,17 @@ import React, { useEffect, useState } from 'react'
 import '../styles/InfoCard.css'
 import { UilPen } from '@iconscout/react-unicons'
 import { ProfileModal } from './ProfileModal'
-import { useDispatch, useSelector } from 'react-redux'
+import {  useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import * as UserApi from '../services/user-service'
-import { logout } from '../actions/AuthAction'
 
 export const InfoCard = () => {
     const [modalOpen, setModalOpen] = useState(false)
 
-    const dispatch = useDispatch()
     const params = useParams()
     const profileUserId = params.id
     const [profileUser, setProfileUser] = useState({})
+    const serverUrl = process.env.REACT_APP_PUBLIC_FOLDER
 
     const { user } = useSelector((state) => state.authReducer.authData)
 
@@ -31,12 +30,8 @@ export const InfoCard = () => {
             }
         }
         fetchProfileUser()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user])
-
-    const handleLogout = () => {
-        dispatch(logout())
-        console.log("logout")
-    }
 
     return (
         <div className="InfoCard">
@@ -51,21 +46,42 @@ export const InfoCard = () => {
                     'Nothing'
                 )}
             </div>
+            <img src={profileUser.profilePicture ? serverUrl + profileUser.profilePicture : serverUrl + 'defaultProfile.png'} alt="" className="followerImage" />
+
             <div className="info">
-                <span>Status </span>
+                <span>Name: </span>
+                <span>
+                    {profileUser.firstname} {profileUser.lastname}{' '}
+                </span>
+            </div>
+            <div className="info">
+                <span>Email: </span>
+                <span>{profileUser.email} </span>
+            </div>
+            <div className="info">
+                <span>Status: </span>
                 <span>{profileUser.relationship}</span>
             </div>
             <div className="info">
-                <span>lives in </span>
+                <span>Lives in: </span>
                 <span>{profileUser.city}</span>
             </div>
             <div className="info">
-                <span>Works at </span>
+                <span>About: </span>
                 <span>{profileUser.about}</span>
             </div>
-            <button className="button logout-button" onClick={handleLogout}>
+            <div className="info">
+                <span style={{ fontWeight: 'bold', fontSize: '20px' }}>{profileUser.followings?.length}</span>
+                <span style={{ marginLeft: '5px' }}>Followed Users</span>
+            </div>
+            <div className="vl" style={{ height: '1px', backgroundColor: '#000', margin: '10px 0' }}></div>
+            <div className="info">
+                <span style={{ fontWeight: 'bold', fontSize: '20px' }}>{profileUser.followers?.length}</span>
+                <span style={{ marginLeft: '5px' }}>Followers</span>
+            </div>
+            {/* <button className="button logout-button" onClick={handleLogout}>
                 Logout
-            </button>
+            </button> */}
         </div>
     )
 }

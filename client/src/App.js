@@ -5,6 +5,8 @@ import { Home } from './views/Home'
 import { Profile } from './views/Profile'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { Chat } from './views/Chat'
+import { NavBar } from './components/NavBar'
+import FollowersModal from  './components/FollowersModal'
 
 function App() {
     const user = useSelector((state) => state.authReducer.authData)
@@ -22,6 +24,7 @@ function App() {
                 <Route path="/home" element={user ? <Home /> : <Navigate to="../auth" />} />
                 <Route path="/auth" element={user ? <Navigate to="../home" /> : <Auth />} />
                 <Route path="/profile/:id" element={user ? <Profile /> : <Navigate to="../auth" />} />
+                <Route path="/NavBar" element={user ? <NavBar /> : <Navigate to="../auth" />} />
                 <Route
                     path="*"
                     element={
@@ -31,6 +34,7 @@ function App() {
                     }
                 />
                 <Route path="/chat" element={user ? <Chat /> : <Navigate to="../auth" />} />
+                
             </Routes>
         </div>
     )
