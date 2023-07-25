@@ -1,8 +1,8 @@
 const { Schema, model } = require('mongoose')
 
-const MessageSchema = new Schema(
+const CommentsSchema = new Schema(
     {
-        postId: {
+        chatId: {
             type: String,
         },
         senderId: {
@@ -17,5 +17,5 @@ const MessageSchema = new Schema(
     }
 )
 
-const Message = model('Message', MessageSchema)
-module.exports = Message
+const Comments = model('Comments', CommentsSchema)
+module.exports = Comments

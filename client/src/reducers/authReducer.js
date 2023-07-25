@@ -30,13 +30,13 @@ const authReducer = (state = { authData: null, loading: false, error: false, upd
         case 'UNFOLLOW_USER':
             return { ...state, authData: { ...state.authData, user: { ...state.authData.user, followings: [...state.authData.user.followings.filter((personId) => personId !== action.data)] } } }
 
-        case 'GET_USER_START':
-            return { ...state, loading: true, error: false }
+        // case 'GET_USER_START':
+        //     return { ...state, loading: true, error: false, test: null }
 
-        case 'GET_USER_SUCCESS':
-            return { ...state, profiles: { ...state.authData, test: action.data }, loading: false, error: false }
-        case 'GET_USER_FAIL':
-            return { ...state, loading: false, error: true }
+        // case 'GET_USER_SUCCESS':
+        //     return { ...state, profiles: { ...state.authData, test: action.data }, loading: false, error: false }
+        // case 'GET_USER_FAIL':
+        //     return { ...state, loading: false, error: true , test: null }
 
         default:
             return state

@@ -27,6 +27,7 @@ import { logout } from '../actions/AuthAction'
 import MessageIcon from '@mui/icons-material/Message'
 import HomeIcon from '@mui/icons-material/Home'
 import ChatIcon from '@mui/icons-material/Chat'
+import { updateNotificationCount } from "../actions/NotificationActions";
 
 import '../styles/FollowersCard.css'
 
@@ -94,6 +95,13 @@ export const NavBar = () => {
     }
 
     //notificaciones
+    const notificationCount = useSelector((state) => state.notificationReducer.notificationCount);
+
+
+
+   
+
+
     const [anchorEl, setAnchorEl] = React.useState(null)
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null)
     const isMenuOpen = Boolean(anchorEl)
@@ -172,7 +180,7 @@ export const NavBar = () => {
             </MenuItem>
             <MenuItem>
                 <IconButton size="large" aria-label="show 17 new notifications" color="inherit">
-                    <Badge badgeContent={17} color="error">
+                    <Badge badgeContent={notificationCount} color="error">
                         <NotificationsIcon />
                     </Badge>
                 </IconButton>
@@ -307,7 +315,7 @@ export const NavBar = () => {
                             </Badge>
                         </IconButton>
                         <IconButton size="large" aria-label="show 17 new notifications" color="inherit">
-                            <Badge badgeContent={17} color="error">
+                            <Badge badgeContent={notificationCount} color="error">
                                 <NotificationsIcon />
                             </Badge>
                         </IconButton>

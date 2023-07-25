@@ -12,11 +12,20 @@ export const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) 
     const [newMessage, setNewMessage] = useState('')
     const scroll = useRef()
 
+    console.log(chat)
+
+
     useEffect(() => {
         if (receivedMessage !== null && receivedMessage.chatId === chat._id) {
             setMessages([...messages, receivedMessage])
         }
     }, [receivedMessage])
+
+    // useEffect(() => {
+    //     if (receivedMessage && chat && receivedMessage.chatId === chat._id) {
+    //       setMessages((prevMessages) => [...prevMessages, receivedMessage]);
+    //     }
+    //   }, [receivedMessage, chat]);
 
     useEffect(() => {
         const userId = chat?.members?.find((id) => id !== currentUser)
@@ -58,7 +67,8 @@ export const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) 
             text: newMessage,
             chatId: chat._id,
         }
-        const receiverId = chat.memberss.find((id) => id !== currentUser)
+        const receiverId = chat.members.find((id) => id !== currentUser)
+        console.log(receiverId)
         // send message to socket server
         setSendMessage({ ...message, receiverId })
         // send message to database

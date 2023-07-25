@@ -16,7 +16,9 @@ import Avatar from '@mui/material/Avatar'
 export const ProfileCard = ({ location, following, setfollowing }) => {
     const dispatch = useDispatch()
     const { user } = useSelector((state) => state.authReducer.authData)
-    const { test } = useSelector((state) => state.authReducer.profiles)
+    const  profileData  = useSelector((state) => state.profileReducer)
+    console.log(profileData)
+
     const serverUrl = process.env.REACT_APP_PUBLIC_FOLDER
     const posts = useSelector((state) => state.postReducer.posts)
     const params = useParams()
