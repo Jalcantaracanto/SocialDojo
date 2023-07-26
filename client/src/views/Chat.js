@@ -35,31 +35,32 @@ export const Chat = () => {
     useEffect(() => {
         socket.current = io(':8080')
         socket.current.emit('new-user-add', user._id)
-        socket.current.on('get-users', (users) => {
-            setOnlineUsers(users)
-        })
-    }, [user])
+        // socket.current.on('get-users', (users) => {
+        //     setOnlineUsers(users)
+        // })
+    }, [])
 
     // Send Message to socket server
     useEffect(() => {
         if (sendMessage !== null) {
-            socket.current.emit('send-message', sendMessage)
-            // console.log(sendMessage)
+            socket.current.emit('send-message', sendMessage, user)
+            console.log(sendMessage)
         }
-    }, [sendMessage])
 
-    // Get the message from socket server
-    useEffect(() => {
-        
-
-        socket.current.on('recieve-message', (data) => {
-            console.log(data)
+        socket.current.on('recibir-mensaje', (data) => {
             setReceivedMessage(data)
-            
         })
-    }, [])
+    }, [sendMessage])
     console.log(receivedMessage)
-    
+    // Get the message from socket server
+    // useEffect(() => {
+    //     socket.current.on('recieve-message', (data) => {
+    //         console.log(data)
+    //         setReceivedMessage(data)
+    //     })
+    // }, [])
+    // console.log(receivedMessage)
+
     const checkOnlineStatus = (chat) => {
         const chatMember = chat.members.find((member) => member !== user._id)
         const online = onlineUsers.find((user) => user.userId === chatMember)
@@ -68,7 +69,7 @@ export const Chat = () => {
 
     return (
         <>
-            <NavBar/>
+            <NavBar />
             <div className="Chat">
                 {/* Left Side */}
                 <div className="Left-side-chat">

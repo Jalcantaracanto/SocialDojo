@@ -40,6 +40,10 @@ const UserSchema = new Schema(
         relationship: String,
         followers: [],
         followings: [],
+        online: {
+            type: Boolean,
+            default: false,
+        }
     },
     { timestamps: true }
 )

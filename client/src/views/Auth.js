@@ -46,7 +46,7 @@ export const Auth = () => {
         <div className="Auth">
             {/* Left Side*/}
             <div className="a-left">
-                <SportsMartialArtsIcon  fontSize="4"  />
+                <SportsMartialArtsIcon  fontSize="large"  />
                 <div className="Webname">
                     <h1>Social Dojo</h1>
                     {/* <h6>Lorem ipsum dolor sit amet consectetur adipisicing elit.</h6> */}
