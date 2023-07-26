@@ -35,5 +35,6 @@ module.exports.socketEvents = (server) => {
                 io.to(user.socketId).emit('recieve-message', data)
             }
         })
+        
     })
 }

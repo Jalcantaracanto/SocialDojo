@@ -20,7 +20,7 @@ export const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) 
 
     useEffect(() => {
         const userId = chat?.members?.find((id) => id !== currentUser)
-        console.log(userId)
+        // console.log(userId)
         const getUserData = async () => {
             try {
                 const { data } = await getUser(userId)
@@ -31,7 +31,7 @@ export const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) 
         }
 
         if (chat !== null) getUserData()
-    }, [chat, currentUser])
+    }, [chat, currentUser, receivedMessage])
 
     useEffect(() => {
         const fetchMessages = async () => {
@@ -58,7 +58,7 @@ export const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) 
             text: newMessage,
             chatId: chat._id,
         }
-        const receiverId = chat.memberss.find((id) => id !== currentUser)
+        const receiverId = chat.members.find((id) => id !== currentUser)
         // send message to socket server
         setSendMessage({ ...message, receiverId })
         // send message to database

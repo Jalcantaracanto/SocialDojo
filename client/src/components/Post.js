@@ -17,7 +17,7 @@ export const Post = ({ data }) => {
     // const [likes, setLikes] = useState(data.likes.length)
     const [likes, setLikes] = useState(data.likes ? data.likes.length : 0)
 
-    console.log(data)
+    // console.log(data)
 
     const handleLike = () => {
         setLiked((prev) => !prev)

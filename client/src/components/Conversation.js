@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 export const Conversation = ({ chat, currentUser, online }) => {
     const [userData, setUserData] = useState(null)
     const dispatch = useDispatch()
-    console.log(chat)
+    // console.log(chat)
 
     useEffect(() => {
         const userId = chat.members.find((id) => id !== currentUser)

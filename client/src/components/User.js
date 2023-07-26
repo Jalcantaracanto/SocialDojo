@@ -10,7 +10,7 @@ export const User = ({ person }) => {
     const serverUrl = process.env.REACT_APP_PUBLIC_FOLDER
     const [following, setfollowing] = useState(person.followers.includes(user._id))
 
-    console.log(following)
+    // console.log(following)
 
     const handleFollow = () => {
         following ? dispatch(unfollowUser(person._id, user)) : dispatch(followUser(person._id, user))

@@ -9,7 +9,6 @@ export const Auth = () => {
     const [isSignUp, setIsSignUp] = useState(false)
     const dispatch = useDispatch()
     const loading = useSelector((state) => state.authReducer.loading)
-    console.log(loading)
     const [formData, setFormData] = useState({
         firstname: '',
         lastname: '',

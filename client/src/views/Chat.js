@@ -44,17 +44,22 @@ export const Chat = () => {
     useEffect(() => {
         if (sendMessage !== null) {
             socket.current.emit('send-message', sendMessage)
+            // console.log(sendMessage)
         }
     }, [sendMessage])
 
     // Get the message from socket server
     useEffect(() => {
+        
+
         socket.current.on('recieve-message', (data) => {
             console.log(data)
             setReceivedMessage(data)
+            
         })
     }, [])
-
+    console.log(receivedMessage)
+    
     const checkOnlineStatus = (chat) => {
         const chatMember = chat.members.find((member) => member !== user._id)
         const online = onlineUsers.find((user) => user.userId === chatMember)

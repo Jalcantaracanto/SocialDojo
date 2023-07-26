@@ -29,7 +29,7 @@ export const ProfileCard = ({ location }) => {
     const [dialogOpen1, setDialogOpen1] = useState(false)
 
     const [modalOpen, setModalOpen] = useState(false)
-    console.log(modalOpen)
+    // console.log(modalOpen)
 
     const handleFollowersClick = () => {
         setDialogOpen(true)
