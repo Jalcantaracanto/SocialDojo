@@ -8,12 +8,12 @@ import { Link } from 'react-router-dom'
 //styles
 import '../styles/RightSide.css'
 // import { TrendCard } from './TrendCard'
-// import { ShareModal } from './ShareModal'
+import { ShareModal } from './ShareModal'
 // import { NavIcons } from './NavIcons'
 import { ProfileCard } from './ProfileCard'
 
 export const RightSide = ({ location }) => {
-    // const [modalOpen, setModalOpen] = useState(false)
+    const [modalOpen, setModalOpen] = useState(false)
 
     return (
         <div className="RightSide">
@@ -21,10 +21,10 @@ export const RightSide = ({ location }) => {
             {/* <NavIcons/> */}
             {/* <TrendCard /> */}
 
-            {/* <button className="button r-button" onClick={() => setModalOpen(true)}>
+            <button className="button r-button" onClick={() => setModalOpen(true)}>
                 Share
-            </button> */}
-            {/* <ShareModal modalOpen={modalOpen} setModalOpen={setModalOpen} /> */}
+            </button>
+            <ShareModal modalOpen={modalOpen} setModalOpen={setModalOpen} />
         </div>
     )
 }

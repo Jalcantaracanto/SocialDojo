@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { UilAnchor } from '@iconscout/react-unicons'
+import SportsMartialArtsIcon from '@mui/icons-material/SportsMartialArts';
 import { useDispatch, useSelector } from 'react-redux'
 //styles
 import '../styles/Auth.css'
@@ -13,7 +13,7 @@ export const Auth = () => {
     const [formData, setFormData] = useState({
         firstname: '',
         lastname: '',
-        username: '',
+        email: '',
         password: '',
         confirmPassword: '',
     })
@@ -37,7 +37,7 @@ export const Auth = () => {
         setFormData({
             firstname: '',
             lastname: '',
-            username: '',
+            email: '',
             password: '',
             confirmPassword: '',
         })
@@ -47,10 +47,10 @@ export const Auth = () => {
         <div className="Auth">
             {/* Left Side*/}
             <div className="a-left">
-                <UilAnchor size="40" />
+                <SportsMartialArtsIcon  fontSize="4"  />
                 <div className="Webname">
                     <h1>Social Dojo</h1>
-                    <h6>Lorem ipsum dolor sit amet consectetur adipisicing elit.</h6>
+                    {/* <h6>Lorem ipsum dolor sit amet consectetur adipisicing elit.</h6> */}
                 </div>
             </div>
             {/* Right  Side*/}
@@ -64,7 +64,7 @@ export const Auth = () => {
                         </div>
                     )}
                     <div>
-                        <input type="text" className="infoInput" name="username" placeholder="UserName" onChange={handleChange} value={formData.username} />
+                        <input type="text" className="infoInput" name="email" placeholder="email" onChange={handleChange} value={formData.username} />
                     </div>
                     <div>
                         <input type="password" className="infoInput" name="password" placeholder="Password" onChange={handleChange} value={formData.password} />
@@ -97,6 +97,7 @@ export const Auth = () => {
                     </button>
                 </form>
             </div>
+            
         </div>
     )
 }

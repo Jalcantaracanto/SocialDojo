@@ -71,13 +71,16 @@ export const ProfileModal = ({ modalOpen, setModalOpen, data }) => {
                 onClose={() => setModalOpen(false)}
             >
                 <form className="infoForm">
-                    <h3>You info</h3>
+                    <h3>Your info</h3>
                     <div>
                         <input type="text" className="infoInput" name="firstname" placeholder="First Name" onChange={handleChange} value={formData.firstname} />
                         <input type="text" className="infoInput" name="lastname" placeholder="Last Name" onChange={handleChange} value={formData.lastname} />
                     </div>
                     <div>
                         <input type="text" className="infoInput" name="about" placeholder="about" onChange={handleChange} value={formData.about} />
+                    </div>
+                    <div>
+                        <input type="text" className="infoInput" name="username" placeholder="username" onChange={handleChange} value={formData.username} />
                     </div>
                     <div>
                         <input type="text" className="infoInput" name="from" placeholder="From" onChange={handleChange} value={formData.from} />
@@ -100,3 +103,7 @@ export const ProfileModal = ({ modalOpen, setModalOpen, data }) => {
         </>
     )
 }
+
+
+
+

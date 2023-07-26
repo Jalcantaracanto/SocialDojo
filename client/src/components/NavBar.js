@@ -27,7 +27,7 @@ import { logout } from '../actions/AuthAction'
 import MessageIcon from '@mui/icons-material/Message'
 import HomeIcon from '@mui/icons-material/Home'
 import ChatIcon from '@mui/icons-material/Chat'
-import { updateNotificationCount } from "../actions/NotificationActions";
+import { updateNotificationCount } from '../actions/NotificationActions'
 
 import '../styles/FollowersCard.css'
 
@@ -95,12 +95,7 @@ export const NavBar = () => {
     }
 
     //notificaciones
-    const notificationCount = useSelector((state) => state.notificationReducer.notificationCount);
-
-
-
-   
-
+    const notificationCount = useSelector((state) => state.notificationReducer.notificationCount)
 
     const [anchorEl, setAnchorEl] = React.useState(null)
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null)
@@ -205,7 +200,6 @@ export const NavBar = () => {
     const [searchFilter, setSearchFilter] = useState([])
     const [searchValue, setSearchValue] = useState('')
     const navigate = useNavigate()
-
     // Error and success messages
 
     const getUserFromService = () => {
@@ -241,9 +235,9 @@ export const NavBar = () => {
 
     const handleChatClick = async (contactId) => {
         try {
+        
             // Verificar si ya existe un chat con el usuario
             const res = await userChats(user._id)
-            // console.log(res)
             const chats = res.data
             const existingChat = chats.find((chat) => chat.members.includes(contactId))
             if (existingChat) {
@@ -251,8 +245,8 @@ export const NavBar = () => {
                 navigate(`/chat`)
 
                 return
-            }
-
+            }         
+            const newChat = await createChat({ senderId: user._id, receiverId: contactId})           
             navigate(`/chat`)
         } catch (err) {
             console.error(err)

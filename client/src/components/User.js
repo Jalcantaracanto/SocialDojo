@@ -3,12 +3,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { followUser, unfollowUser } from '../actions/userAction'
 import { Link } from 'react-router-dom'
 import Avatar from '@mui/material/Avatar'
-
-export const User = ({ person, following, setfollowing }) => {
+ 
+export const User = ({ person }) => {
     const dispatch = useDispatch()
     const { user } = useSelector((state) => state.authReducer.authData)
     const serverUrl = process.env.REACT_APP_PUBLIC_FOLDER
-    // const [following, setfollowing] = useState(person.followers.includes(user._id))
+    const [following, setfollowing] = useState(person.followers.includes(user._id))
+
+    console.log(following)
 
     const handleFollow = () => {
         following ? dispatch(unfollowUser(person._id, user)) : dispatch(followUser(person._id, user))
@@ -33,6 +35,7 @@ export const User = ({ person, following, setfollowing }) => {
             <button className={following ? 'button fc-button UnfollowButton' : 'button fc-button'} onClick={handleFollow}>
                 {following ? 'Unfollow' : 'Follow'}
             </button>
+            {/* <FollowButton person={person}/> */}
         </div>
     )
 }

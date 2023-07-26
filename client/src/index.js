@@ -6,15 +6,18 @@ import reportWebVitals from './reportWebVitals'
 import { Provider } from 'react-redux'
 import store from './store/ReduxStore'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { SocketProvider } from './context/SocketContext'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
     <Provider store={store}>
-        <BrowserRouter>
-            <Routes>
-                <Route path="*" element={<App />} />
-            </Routes>
-        </BrowserRouter>
+        <SocketProvider>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="*" element={<App />} />
+                </Routes>
+            </BrowserRouter>
+        </SocketProvider>
     </Provider>
 )
 

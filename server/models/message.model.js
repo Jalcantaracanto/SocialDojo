@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose')
 
 const MessageSchema = new Schema(
     {
-        postId: {
+        chatId: {
             type: String,
         },
         senderId: {

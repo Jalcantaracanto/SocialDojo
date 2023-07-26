@@ -1,72 +1,80 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { getAllUsers, getUser } from '../services/user-service'
-import '../styles/FollowersCard.css'
-import { List, ListItem, ListItemText, Typography } from '@mui/material'
-import { Link } from 'react-router-dom'
+import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Typography } from '@mui/material'
+import { Link, useParams } from 'react-router-dom'
 
-const FollowersModal = () => {
+import '../styles/FollowersCard.css'
+
+const FollowersModal = ({data}) => {
     const { user } = useSelector((state) => state.authReducer.authData)
     const [followingUsers, setFollowingUsers] = useState([])
     const [follower, setFollower] = useState([])
     const serverUrl = process.env.REACT_APP_PUBLIC_FOLDER
 
-    const getUsersFromFollowings = () => {
-        const followingIds = user.followings
+    const params = useParams()
 
-        Promise.all(followingIds.map((followingId) => getUser(followingId)))
-            .then((responses) => {
-                const followingData = responses.map((response) => response.data)
-                setFollowingUsers(followingData)
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+
+    const getUsersFromFollowings = async () => {
+        const followingIds = data.followings
+
+        try {
+            const responses = await Promise.all(followingIds.map((followingId) => getUser(followingId)))
+            const followingData = responses.map((response) => response.data)
+            setFollowingUsers(followingData)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
-    const getUsersfromFollowers = () => {
-        const followersIds = user.followers
+    const getUsersFromFollowers = async () => {
+        const followersIds = data.followers
 
-        Promise.all(followersIds.map((followerId) => getUser(followerId)))
-            .then((responses) => {
-                const followersData = responses.map((response) => response.data)
-                setFollower(followersData)
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+        try {
+            const responses = await Promise.all(followersIds.map((followerId) => getUser(followerId)))
+            const followersData = responses.map((response) => response.data)
+            setFollower(followersData)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     useEffect(() => {
         getUsersFromFollowings()
-        getUsersfromFollowers()
+        getUsersFromFollowers()
     }, [user])
 
     return (
         <div className="followerCard">
-            <Typography variant="h5">Users you follow</Typography>
+            <Typography variant="h5" gutterBottom>
+                Users you follow
+            </Typography>
             <List>
-                {followingUsers.map((following, id) => (
-                    <ListItem key={id}>
-                        <img src={following.profilePicture ? serverUrl + following.profilePicture : serverUrl + 'defaultProfile.png'} alt="" className="followerImage" />
+                {followingUsers.map((following) => (
+                    <ListItem key={following._id}>
+                        <ListItemAvatar>
+                            <Avatar alt={`${following.firstname} ${following.lastname}`} src={following.profilePicture ? serverUrl + following.profilePicture : serverUrl + 'defaultProfile.png'} />
+                        </ListItemAvatar>
+                        <ListItemText primary={`${following.firstname} ${following.lastname}`} />
                         <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/profile/${following._id}`}>
-                            <span>
-                                {following.firstname} {following.lastname}
-                            </span>
+                            View Profile
                         </Link>
                     </ListItem>
                 ))}
             </List>
 
-            <Typography variant="h5">Your Followers</Typography>
+            <Typography variant="h5" gutterBottom>
+                Your Followers
+            </Typography>
             <List>
-                {follower.map((follower, id) => (
-                    <ListItem key={id}>
-                        <img src={follower.profilePicture ? serverUrl + follower.profilePicture : serverUrl + 'defaultProfile.png'} alt="" className="followerImage" />
-                         <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/profile/${follower._id}`}>
-                            <span>
-                                {follower.firstname} {follower.lastname}
-                            </span>
+                {follower.map((follower) => (
+                    <ListItem key={follower._id}>
+                        <ListItemAvatar>
+                            <Avatar alt={`${follower.firstname} ${follower.lastname}`} src={follower.profilePicture ? serverUrl + follower.profilePicture : serverUrl + 'defaultProfile.png'} />
+                        </ListItemAvatar>
+                        <ListItemText primary={`${follower.firstname} ${follower.lastname}`} />
+                        <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/profile/${follower._id}`}>
+                            View Profile
                         </Link>
                     </ListItem>
                 ))}

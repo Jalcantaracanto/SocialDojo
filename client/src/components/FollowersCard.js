@@ -7,7 +7,7 @@ import '../styles/FollowersCard.css'
 import { useSelector } from 'react-redux'
 import { getAllUsers } from '../services/user-service'
 
-export const FollowersCard = ({ following, setfollowing }) => {
+export const FollowersCard = () => {
     const [persons, setPersons] = useState([])
     const { user } = useSelector((state) => state.authReducer.authData)
 
@@ -24,7 +24,7 @@ export const FollowersCard = ({ following, setfollowing }) => {
             <h3>People you may know</h3>
             {persons.map((person, id) => {
                 if (person._id !== user._id) {
-                    return <User key={id} person={person} following={following} setfollowing={setfollowing} />
+                    return <User key={id} person={person} />
                 }
             })}
         </div>

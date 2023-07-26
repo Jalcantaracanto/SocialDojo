@@ -25,5 +25,6 @@ require('./server/routes/chat.route')(app)
 require('./server/routes/message.route')(app)
 require('./server/routes/comments.route')(app)
 
-server.listen(port, () => console.log(`Listening on port ${port}`))
 socketEvents(server)
+
+server.listen(port, () => console.log(`Listening on port ${port}`))

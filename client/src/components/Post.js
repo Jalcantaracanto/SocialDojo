@@ -5,6 +5,7 @@ import Heart from '../assets/like.png'
 import NotLike from '../assets/notlike.png'
 import { useSelector } from 'react-redux'
 import { likePost } from '../services/post-service'
+import { format } from 'timeago.js'
 
 //styles
 import '../styles/Post.css'
@@ -12,10 +13,11 @@ import '../styles/Post.css'
 export const Post = ({ data }) => {
     const { user } = useSelector((state) => state.authReducer.authData)
     // const [liked, setLiked] = useState(data.likes.includes(user._id))
-    const [liked, setLiked] = useState(data.likes && data.likes.includes(user._id));
+    const [liked, setLiked] = useState(data.likes && data.likes.includes(user._id))
     // const [likes, setLikes] = useState(data.likes.length)
-    const [likes, setLikes] = useState(data.likes ? data.likes.length : 0);
+    const [likes, setLikes] = useState(data.likes ? data.likes.length : 0)
 
+    console.log(data)
 
     const handleLike = () => {
         setLiked((prev) => !prev)
@@ -38,6 +40,9 @@ export const Post = ({ data }) => {
                     <b>{data.name}</b>
                 </span>
                 <span>{data.description}</span>
+                <div className="post-time">
+                    <span >{format(data.createdAt)}</span>
+                </div>
             </div>
         </div>
     )

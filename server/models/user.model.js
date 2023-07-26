@@ -4,7 +4,7 @@ const UserSchema = new Schema(
     {
         username: {
             type: String,
-            required: [true, 'Username is required'],
+            // required: [true, 'Username is required'],
             minlength: [3, 'Username must be at least 3 characters long'],
         },
         password: {
@@ -22,6 +22,7 @@ const UserSchema = new Schema(
         email: {
             type: String,
             // required: [true, 'Email is required'],
+            required: [true, 'Email is required'],
             validate: {
                 validator: (val) => /^([\w-\.]+@([\w-]+\.)+[\w-]+)?$/.test(val),
                 message: 'Please enter a valid email',

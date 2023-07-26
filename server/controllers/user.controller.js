@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
 module.exports.registerUser = (req, res) => {
-    const { username, password } = req.body
+    const { email, password } = req.body
 
     bcrypt
         .genSalt(10)
@@ -11,7 +11,7 @@ module.exports.registerUser = (req, res) => {
         .then((hashedPass) => {
             //transformamos la clave en un hash
             req.body.password = hashedPass
-            return User.findOne({ username })
+            return User.findOne({ email })
         })
         .then((oldUser) => {
             //verificamos si el usuario ya existe
@@ -24,7 +24,7 @@ module.exports.registerUser = (req, res) => {
             return newUser.save()
         })
         .then((user) => {
-            const token = jwt.sign({ username: user.username, id: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' }) //creamos el token
+            const token = jwt.sign({ email: user.email, id: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' }) //creamos el token
             res.status(200).json({ user, token }) //enviamos el usuario y el token
         })
         .catch((error) => {
@@ -34,9 +34,9 @@ module.exports.registerUser = (req, res) => {
 
 //Login User
 module.exports.loginUser = (req, res) => {
-    const { username, password } = req.body
+    const { email, password } = req.body
 
-    User.findOne({ username: username })
+    User.findOne({ email: email })
         .then((user) => {
             if (!user) {
                 return res.status(404).json('User not found')
@@ -46,7 +46,7 @@ module.exports.loginUser = (req, res) => {
                 if (!validity) {
                     return res.status(400).json('wrong password')
                 }
-                const token = jwt.sign({ username: user.username, id: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' })
+                const token = jwt.sign({ email: user.email, id: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' })
                 res.status(200).json({ user, token })
             })
         })

@@ -5,7 +5,9 @@ import { PostSide } from '../components/PostSide'
 import { RightSide } from '../components/RightSide'
 import { NavBar } from '../components/NavBar'
 
+
 export const Home = () => {
+    
     return (
         <>
             <NavBar />

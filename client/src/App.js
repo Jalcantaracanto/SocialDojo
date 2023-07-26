@@ -6,7 +6,7 @@ import { Profile } from './views/Profile'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { Chat } from './views/Chat'
 import { NavBar } from './components/NavBar'
-import FollowersModal from  './components/FollowersModal'
+import FollowersModal from './components/FollowersModal'
 
 function App() {
     const user = useSelector((state) => state.authReducer.authData)
@@ -34,7 +34,6 @@ function App() {
                     }
                 />
                 <Route path="/chat" element={user ? <Chat /> : <Navigate to="../auth" />} />
-                
             </Routes>
         </div>
     )
