@@ -29,12 +29,14 @@ import HomeIcon from '@mui/icons-material/Home'
 import ChatIcon from '@mui/icons-material/Chat'
 import { updateNotificationCount } from '../actions/NotificationActions'
 
+import io from 'socket.io-client'
+
 import '../styles/FollowersCard.css'
 
 const Demo = styled('div')(({ theme }) => ({
     backgroundColor: 'white',
     width: '15%',
-    marginLeft: '171vh',
+    marginLeft: '79%',
     marginTop: '1vh',
     position: 'absolute',
     top: '64px',
@@ -81,6 +83,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
             width: '20ch',
         },
     },
+}))
+
+const GradientAppBar = styled(AppBar)(({ theme }) => ({
+    background: 'var(--navBar)', // Replace the colors with your desired gradient
 }))
 
 export const NavBar = () => {
@@ -235,19 +241,18 @@ export const NavBar = () => {
 
     const handleChatClick = async (contactId) => {
         try {
-        
             // Verificar si ya existe un chat con el usuario
             const res = await userChats(user._id)
             const chats = res.data
+            console.log(res.data)
             const existingChat = chats.find((chat) => chat.members.includes(contactId))
             if (existingChat) {
                 // Ya existe un chat con la persona
                 navigate(`/chat`)
-
-                return
-            }         
-            const newChat = await createChat({ senderId: user._id, receiverId: contactId})           
-            navigate(`/chat`)
+            } else {
+                const newChat = await createChat({ senderId: user._id, receiverId: contactId })
+                navigate(`/chat`)
+            }
         } catch (err) {
             console.error(err)
         }
@@ -255,14 +260,27 @@ export const NavBar = () => {
 
     useEffect(() => {
         const filteredUsers = users.filter((user) => {
-            return user.username.toLowerCase().includes(searchValue.toLowerCase())
+            return user.username?.toLowerCase().includes(searchValue.toLowerCase())
         })
         setSearchFilter(filteredUsers)
     }, [searchValue, users])
 
+    const [socket, setSocket] = useState(null) // Variable para almacenar la instancia del socket
+
+    // Conectar el socket cuando el componente se monta
+    useState(() => {
+        const newSocket = io('http://localhost:3001') // Cambia la URL a la dirección de tu servidor de socket.io
+        setSocket(newSocket)
+
+        // Desconectar el socket cuando el componente se desmonte (opcional, pero es buena práctica)
+        return () => {
+            newSocket.disconnect()
+        }
+    }, [])
+
     return (
         <Box sx={{ flexGrow: 1, marginBottom: '1rem' }}>
-            <AppBar position="static">
+            <GradientAppBar position="static">
                 <Toolbar>
                     {/* <IconButton size="large" edge="start" color="inherit" aria-label="open drawer" sx={{ mr: 2 }}>
                         <MenuIcon />
@@ -287,6 +305,10 @@ export const NavBar = () => {
                             aria-label="show 17 new notifications"
                             color="inherit"
                             onClick={() => {
+                                // Desconectar el socket al hacer clic en el icono "Home"
+                                if (socket) {
+                                    socket.disconnect()
+                                }
                                 navigate('/home')
                             }}
                         >
@@ -300,18 +322,18 @@ export const NavBar = () => {
                                 navigate('/chat')
                             }}
                         >
-                            <ChatIcon />
+                            <MailIcon />
                         </IconButton>
 
-                        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+                        {/* <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                             <Badge badgeContent={4} color="error">
                                 <MailIcon />
                             </Badge>
-                        </IconButton>
+                        </IconButton> */}
                         <IconButton size="large" aria-label="show 17 new notifications" color="inherit">
-                            <Badge badgeContent={notificationCount} color="error">
+                            {/* <Badge badgeContent={notificationCount} color="error">
                                 <NotificationsIcon />
-                            </Badge>
+                            </Badge> */}
                         </IconButton>
                         <IconButton size="large" edge="end" aria-label="account of current user" aria-controls={menuId} aria-haspopup="true" onClick={handleProfileMenuOpen} color="inherit">
                             <Avatar alt="Avatar" src={user.profilePicture ? serverUrl + user.profilePicture : serverUrl + defaultAvatar}>
@@ -331,7 +353,7 @@ export const NavBar = () => {
                         </IconButton>
                     </Box>
                 </Toolbar>
-            </AppBar>
+            </GradientAppBar>
             {renderMobileMenu}
             {renderMenu}
             {searchValue && (

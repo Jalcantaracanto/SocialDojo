@@ -10,17 +10,14 @@ export const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) 
     const [userData, setUserData] = useState(null)
     const [messages, setMessages] = useState([])
     const [newMessage, setNewMessage] = useState('')
-    const scroll = useRef()
 
-    useEffect(() => {
-        if (receivedMessage !== null && receivedMessage.chatId === chat._id) {
-            setMessages([...messages, receivedMessage])
-        }
-    }, [receivedMessage])
+    const handleChange = (newMessage) => {
+        setNewMessage(newMessage)
+    }
 
+    // fetching data for header
     useEffect(() => {
         const userId = chat?.members?.find((id) => id !== currentUser)
-        // console.log(userId)
         const getUserData = async () => {
             try {
                 const { data } = await getUser(userId)
@@ -31,8 +28,9 @@ export const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) 
         }
 
         if (chat !== null) getUserData()
-    }, [chat, currentUser, receivedMessage])
+    }, [chat, currentUser])
 
+    // fetch messages
     useEffect(() => {
         const fetchMessages = async () => {
             try {
@@ -46,9 +44,10 @@ export const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) 
         if (chat !== null) fetchMessages()
     }, [chat])
 
-    const handleChange = (newMessage) => {
-        setNewMessage(newMessage)
-    }
+    // Always scroll to last Message
+    useEffect(() => {
+        scroll.current?.scrollIntoView({ behavior: 'smooth' })
+    }, [messages])
 
     // Send Message
     const handleSend = async (e) => {
@@ -71,12 +70,16 @@ export const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) 
         }
     }
 
-    // Always scroll to last Message
+    // Receive Message from parent component
     useEffect(() => {
-        scroll.current?.scrollIntoView({ behavior: 'smooth' })
-    }, [messages])
+        console.log('Message Arrived: ', receivedMessage)
+        if (receivedMessage !== null && receivedMessage.chatId === chat._id) {
+            setMessages([...messages, receivedMessage])
+        }
+    }, [receivedMessage])
 
-    
+    const scroll = useRef()
+    const imageRef = useRef()
 
     return (
         <>

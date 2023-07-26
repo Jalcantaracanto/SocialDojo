@@ -1,18 +1,19 @@
 :root {
-    --yellow: #f5c32c;
-    --orange: #fca61f;
+    --yellow: #396943;
+    --orange: #57a15b;
     --black: #242d49;
     --gray: rgba(36, 45, 73, 0.65);
     --profileShadow: 0px 4px 17px 2px rgba(0, 0, 0, 0.25);
     --hrColor: #cfcdcd;
     --cardColor: rgba(255, 255, 255, 0.64);
    /*  --buttonBg: linear-gradient(98.63deg, #f9a225 0%, #f95f35 100%); */
-    --buttonBg: linear-gradient(98.63deg, #bdce50 0%, #e0a797 100%);
+    --buttonBg: linear-gradient(98.63deg, #57a15b 0%, #396943 100%);
     --inputColor: rgba(40, 52, 62, 0.07);
     --photo: #4cb256;
     --video: #4a4eb7;
     --location: #ef5757;
     --schedule: #e1ae4a;
+    --navBar: linear-gradient(98.63deg, #57a15b 0%, #396943 100%);
 }
 
 .App {

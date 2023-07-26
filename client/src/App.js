@@ -17,8 +17,8 @@ function App() {
                 height: window.location.href === 'http://localhost:3000/chat' ? 'calc(100vh - 2rem)' : 'auto',
             }}
         >
-            <div className="blur" style={{ top: '-18%', right: '0' }}></div>
-            <div className="blur" style={{ top: '36%', left: '-8rem' }}></div>
+            {/* <div className="blur" style={{ top: '-18%', right: '0' }}></div>
+            <div className="blur" style={{ top: '36%', left: '-8rem' }}></div> */}
             <Routes>
                 <Route path="/" element={user ? <Navigate to="home" /> : <Navigate to="auth" />} />
                 <Route path="/home" element={user ? <Home /> : <Navigate to="../auth" />} />

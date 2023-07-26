@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { followUser, unfollowUser } from '../actions/userAction'
 import { Link } from 'react-router-dom'
 import Avatar from '@mui/material/Avatar'
- 
+
 export const User = ({ person }) => {
     const dispatch = useDispatch()
     const { user } = useSelector((state) => state.authReducer.authData)
@@ -16,6 +16,8 @@ export const User = ({ person }) => {
         following ? dispatch(unfollowUser(person._id, user)) : dispatch(followUser(person._id, user))
         setfollowing((prev) => !prev)
     }
+
+    console.log(person)
     return (
         <div className="follower">
             <div>
@@ -29,7 +31,7 @@ export const User = ({ person }) => {
                             {person.firstname} {person.lastname}
                         </span>
                     </Link>
-                    <span>@{person.username}</span>
+                    { person.username !== null ? <span>@{person.username}</span> :  <span></span>}
                 </div>
             </div>
             <button className={following ? 'button fc-button UnfollowButton' : 'button fc-button'} onClick={handleFollow}>

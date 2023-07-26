@@ -22,7 +22,8 @@
 
 .post-time{
     display: flex;
+    margin-top: 1rem;
     font-size: 0.7rem;
     color: var(--textColor);
-    justify-content: flex-end;
+    justify-content: space-between;
 }

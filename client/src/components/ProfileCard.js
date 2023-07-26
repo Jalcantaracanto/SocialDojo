@@ -2,7 +2,7 @@
 import '../styles/ProfileCard.css'
 // React
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { getUser } from '../services/user-service'
 import { followUser, unfollowUser } from '../actions/userAction'
@@ -13,6 +13,7 @@ import { ProfileModal } from './ProfileModal'
 
 //MUI
 import Avatar from '@mui/material/Avatar'
+import { createChat, userChats } from '../services/chat-service'
 
 export const ProfileCard = ({ location }) => {
     const dispatch = useDispatch()
@@ -21,6 +22,7 @@ export const ProfileCard = ({ location }) => {
     const posts = useSelector((state) => state.postReducer.posts)
     const params = useParams()
 
+    const navigate = useNavigate()
     const profileUserId = params.id
     const [profileUser, setProfileUser] = useState(null)
 
@@ -73,6 +75,24 @@ export const ProfileCard = ({ location }) => {
         getUserFromService()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params])
+
+    const handleChatClick = async (contactId) => {
+        try {
+            const res = await userChats(user._id)
+            const chats = res.data
+            const existingChat = chats.find((chat) => chat.members.includes(contactId))
+            if (existingChat) {
+                navigate(`/chat`)
+
+                return
+            }
+
+            const newChat = await createChat({ senderId: user._id, receiverId: contactId })
+            navigate(`/chat`)
+        } catch (error) {
+            console.error(error)
+        }
+    }
 
     if (params['*'] === 'home' || params.id === user._id) {
         return (
@@ -146,17 +166,17 @@ export const ProfileCard = ({ location }) => {
                         )}
                     </div>
                 </>
-                {location === 'profilePage' ? '' : <span>@{user.username}</span>}
+                {location === 'profilePage' ? user.username !== null ? <span></span> : null : <span>@{user.username}</span>}
                 <Dialog open={dialogOpen} onClose={handleDialogClose} fullWidth maxWidth="sm">
                     <DialogTitle>Followers and Following</DialogTitle>
                     <DialogContent>
-                        <FollowersModal />
+                        <FollowersModal data={user}/>
                     </DialogContent>
                 </Dialog>
                 <Dialog open={dialogOpen1} onClose={handleDialog1Close} fullWidth maxWidth="sm">
                     {/* <DialogTitle>Profile Info</DialogTitle> */}
                     <DialogContent>
-                        <InfoCard setModalOpen={setModalOpen} handleDialog1Close={handleDialog1Close} />
+                        <InfoCard setModalOpen={setModalOpen} handleDialog1Close={handleDialog1Close} data={user}/>
                     </DialogContent>
                 </Dialog>
                 <ProfileModal modalOpen={modalOpen} setModalOpen={setModalOpen} data={user} />
@@ -222,21 +242,24 @@ export const ProfileCard = ({ location }) => {
                                     {following ? 'Unfollow' : 'Follow'}
                                 </button>
                                 {/* <FollowButton person= {profileUser}/> */}
-                                <button className="button pc-button"> Message</button>
+                                <button className="button pc-button" onClick={() => handleChatClick(params.id)}>
+                                    {' '}
+                                    Message
+                                </button>
                             </div>
                             <Dialog open={dialogOpen} onClose={handleDialogClose} fullWidth maxWidth="sm">
                                 <DialogTitle>Followers and Following</DialogTitle>
                                 <DialogContent>
-                                    <FollowersModal data={profileUser}/>
+                                    <FollowersModal data={profileUser} />
                                 </DialogContent>
                             </Dialog>
                             <Dialog open={dialogOpen1} onClose={handleDialog1Close} fullWidth maxWidth="sm">
                                 {/* <DialogTitle>Profile Info</DialogTitle> */}
                                 <DialogContent>
-                                    <InfoCard setModalOpen={setModalOpen} handleDialog1Close={handleDialog1Close} />
+                                    <InfoCard setModalOpen={setModalOpen} handleDialog1Close={handleDialog1Close} data={profileUser}/>
                                 </DialogContent>
                             </Dialog>
-                            <ProfileModal modalOpen={modalOpen} setModalOpen={setModalOpen} data={user}  />
+                            <ProfileModal modalOpen={modalOpen} setModalOpen={setModalOpen} data={user} />
                         </div>
                     </>
                 )}

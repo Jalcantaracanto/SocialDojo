@@ -47,7 +47,7 @@ const FollowersModal = ({data}) => {
     return (
         <div className="followerCard">
             <Typography variant="h5" gutterBottom>
-                Users you follow
+                Following
             </Typography>
             <List>
                 {followingUsers.map((following) => (
@@ -64,7 +64,7 @@ const FollowersModal = ({data}) => {
             </List>
 
             <Typography variant="h5" gutterBottom>
-                Your Followers
+                Followers
             </Typography>
             <List>
                 {follower.map((follower) => (

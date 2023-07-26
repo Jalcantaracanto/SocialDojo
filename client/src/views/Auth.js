@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import SportsMartialArtsIcon from '@mui/icons-material/SportsMartialArts';
+import SportsMartialArtsIcon from '@mui/icons-material/SportsMartialArts'
 import { useDispatch, useSelector } from 'react-redux'
 //styles
 import '../styles/Auth.css'
@@ -46,7 +46,7 @@ export const Auth = () => {
         <div className="Auth">
             {/* Left Side*/}
             <div className="a-left">
-                <SportsMartialArtsIcon  fontSize="large"  />
+                <SportsMartialArtsIcon fontSize="large" />
                 <div className="Webname">
                     <h1>Social Dojo</h1>
                     {/* <h6>Lorem ipsum dolor sit amet consectetur adipisicing elit.</h6> */}
@@ -96,7 +96,6 @@ export const Auth = () => {
                     </button>
                 </form>
             </div>
-            
         </div>
     )
 }

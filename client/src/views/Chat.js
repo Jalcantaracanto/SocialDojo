@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import '../styles/Chat.css'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { userChats } from '../services/chat-service'
 import { Conversation } from '../components/Conversation'
 import { ChatBox } from '../components/ChatBox'
@@ -10,6 +10,7 @@ import { NavIcons } from '../components/NavIcons'
 import { NavBar } from '../components/NavBar'
 
 export const Chat = () => {
+    const dispatch = useDispatch()
     const socket = useRef()
     const { user } = useSelector((state) => state.authReducer.authData)
 
@@ -18,6 +19,7 @@ export const Chat = () => {
     const [currentChat, setCurrentChat] = useState(null)
     const [sendMessage, setSendMessage] = useState(null)
     const [receivedMessage, setReceivedMessage] = useState(null)
+    const [isSocketConnected, setIsSocketConnected] = useState(false)
     // Get the chat in chat section
     useEffect(() => {
         const getChats = async () => {
@@ -33,33 +35,32 @@ export const Chat = () => {
 
     // Connect to Socket.io
     useEffect(() => {
-        socket.current = io(':8080')
+        socket.current = io('ws://localhost:8080')
         socket.current.emit('new-user-add', user._id)
-        // socket.current.on('get-users', (users) => {
-        //     setOnlineUsers(users)
-        // })
-    }, [])
+        socket.current.on('get-users', (users) => {
+            setOnlineUsers(users)
+        })
+        setIsSocketConnected(true)
+        return () => {
+            socket.current.disconnect()
+            setIsSocketConnected(false) // Actualizar el estado de la variable de estado a false cuando se desconecte el socket
+        }
+    }, [user])
 
     // Send Message to socket server
     useEffect(() => {
         if (sendMessage !== null) {
-            socket.current.emit('send-message', sendMessage, user)
-            console.log(sendMessage)
+            socket.current.emit('send-message', sendMessage)
         }
+    }, [sendMessage])
 
-        socket.current.on('recibir-mensaje', (data) => {
+    // Get the message from socket server
+    useEffect(() => {
+        socket.current.on('recieve-message', (data) => {
+            console.log(data)
             setReceivedMessage(data)
         })
-    }, [sendMessage])
-    console.log(receivedMessage)
-    // Get the message from socket server
-    // useEffect(() => {
-    //     socket.current.on('recieve-message', (data) => {
-    //         console.log(data)
-    //         setReceivedMessage(data)
-    //     })
-    // }, [])
-    // console.log(receivedMessage)
+    }, [])
 
     const checkOnlineStatus = (chat) => {
         const chatMember = chat.members.find((member) => member !== user._id)

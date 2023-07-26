@@ -92,96 +92,95 @@
 //     )
 // }
 
-import React, { useEffect, useState } from 'react';
-import '../styles/InfoCard.css';
-import { UilPen } from '@iconscout/react-unicons';
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import * as UserApi from '../services/user-service';
+import React, { useEffect, useState } from 'react'
+import '../styles/InfoCard.css'
+import { UilPen } from '@iconscout/react-unicons'
+import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
+import * as UserApi from '../services/user-service'
 
-import { Avatar, Card, CardContent, Typography, IconButton, Divider } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
+import { Avatar, Card, CardContent, Typography, IconButton, Divider } from '@mui/material'
+import EditIcon from '@mui/icons-material/Edit'
 
-import { ProfileModal } from './ProfileModal';
+import { ProfileModal } from './ProfileModal'
 
-export const InfoCard = ({ handleDialog1Close, setModalOpen }) => {
-  const params = useParams();
-  const profileUserId = params.id;
-  const [profileUser, setProfileUser] = useState({});
-  const serverUrl = process.env.REACT_APP_PUBLIC_FOLDER;
+export const InfoCard = ({ handleDialog1Close, setModalOpen, data }) => {
+    const params = useParams()
+    const profileUserId = params.id
+    const [profileUser, setProfileUser] = useState({})
+    const serverUrl = process.env.REACT_APP_PUBLIC_FOLDER
 
-  const { user } = useSelector((state) => state.authReducer.authData);
+    const { user } = useSelector((state) => state.authReducer.authData)
 
-  useEffect(() => {
-    const fetchProfileUser = async () => {
-      if (profileUserId === user._id) {
-        setProfileUser(user);
-      } else {
-        const profileUser = await UserApi.getUser(profileUserId);
-        setProfileUser(profileUser);
-      }
-    };
-    fetchProfileUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+    useEffect(() => {
+        const fetchProfileUser = async () => {
+            if (profileUserId === user._id) {
+                setProfileUser(user)
+            } else {
+                const profileUser = await UserApi.getUser(profileUserId)
+                setProfileUser(profileUser)
+            }
+        }
+        fetchProfileUser()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user])
 
-  const handleClick = () => {
-    setModalOpen(true);
-    handleDialog1Close();
-  };
+    const handleClick = () => {
+        setModalOpen(true)
+        handleDialog1Close()
+    }
 
-  return (
-    <Card variant="outlined" className="InfoCard">
-      <CardContent>
-        <Typography variant="h5">Profile Info</Typography>
-        {user._id === profileUserId ? (
-          <div>
-            <IconButton onClick={handleClick} color="primary" size="small">
-              <EditIcon />
-            </IconButton>
-            <ProfileModal setModalOpen={setModalOpen} data={user} />
-          </div>
-        ) : (
-          'Nothing'
-        )}
-        <Avatar
-          alt="Profile Picture"
-          src={profileUser.profilePicture ? serverUrl + profileUser.profilePicture : serverUrl + 'defaultProfile.png'}
-          sx={{ width: 100, height: 100, margin: '0 auto' }}
-        />
-        <div className="info">
-          <span>Name:</span>
-          <span>
-            {profileUser.firstname} {profileUser.lastname}
-          </span>
-        </div>
-        <div className="info">
-          <span>Email:</span>
-          <span>{profileUser.email}</span>
-        </div>
-        <div className="info">
-          <span>Status:</span>
-          <span>{profileUser.relationship}</span>
-        </div>
-        <div className="info">
-          <span>Lives in:</span>
-          <span>{profileUser.city}</span>
-        </div>
-        <div className="info">
-          <span>About:</span>
-          <span>{profileUser.about}</span>
-        </div>
-        <div className="info">
-          <span style={{ fontWeight: 'bold', fontSize: '20px' }}>{profileUser.followings?.length}</span>
-          <span style={{ marginLeft: '5px' }}>Followed Users</span>
-        </div>
-        <Divider style={{ margin: '10px 0' }} />
-        <div className="info">
-          <span style={{ fontWeight: 'bold', fontSize: '20px' }}>{profileUser.followers?.length}</span>
-          <span style={{ marginLeft: '5px' }}>Followers</span>
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
-
+    return (
+        <Card variant="outlined" className="InfoCard">
+            <CardContent>
+                <Typography variant="h5">Profile Info</Typography>
+                {user._id === data._id ? (
+                    <div>
+                        <IconButton onClick={handleClick} color="primary" size="small">
+                            <EditIcon />
+                        </IconButton>
+                        <ProfileModal setModalOpen={setModalOpen} data={user} />
+                    </div>
+                ) : (
+                    <></>
+                )}
+                {data && (
+                    <Avatar style={{ width: '3rem', height: '3rem' }} alt="Avatar" src={data.profilePicture ? serverUrl + data.profilePicture : serverUrl + data.firstname[0] + data.lastname[0]}>
+                        {data.firstname[0].toUpperCase() + data.lastname[0].toUpperCase()}
+                    </Avatar>
+                )}
+                <div className="info">
+                    <span>Name: </span>
+                    <span>
+                        {data.firstname} {data.lastname}
+                    </span>
+                </div>
+                <div className="info">
+                    <span>Email: </span>
+                    <span>{data.email}</span>
+                </div>
+                <div className="info">
+                    <span>Status: </span>
+                    <span>{data.relationship}</span>
+                </div>
+                <div className="info">
+                    <span>Lives in: </span>
+                    <span>{data.city}</span>
+                </div>
+                <div className="info">
+                    <span>About: </span>
+                    <span>{data.about}</span>
+                </div>
+                <div className="info">
+                    <span style={{ fontWeight: 'bold', fontSize: '20px' }}>{data.followings?.length}</span>
+                    <span style={{ marginLeft: '5px' }}>Followed Users</span>
+                </div>
+                <Divider style={{ margin: '10px 0' }} />
+                <div className="info">
+                    <span style={{ fontWeight: 'bold', fontSize: '20px' }}>{data.followers?.length}</span>
+                    <span style={{ marginLeft: '5px' }}>Followers</span>
+                </div>
+            </CardContent>
+        </Card>
+    )
+}
